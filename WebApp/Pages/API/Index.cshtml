@@ -1,0 +1,220 @@
+﻿@page "{id?}"
+@model WebApp.Pages.CV.IndexModel
+@{
+    ViewData["Title"] = "Bank";
+    Layout = "~/Pages/Shared/_LayoutForm1.cshtml";
+}
+
+
+
+
+
+
+<div class="card card-widget widget-user shadow">
+
+    <div class="card-body">
+        <div class="row">
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-form-label">Bank</label>
+
+                    <select asp-for="@Model.BankName" class="form-control" asp-items="ViewBag.Bank">
+                        <option value="">-select-</option>
+                    </select>
+
+
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-form-label">Branch</label>
+
+                    <select asp-for="@Model.BranchName" class="form-control" asp-items="ViewBag.Branch">
+                        <option value="">-select-</option>
+                    </select>
+
+                </div>
+            </div>
+            <div class="col-md-12">
+                <table id="TblIFSCList" class="table table-sm table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th class="search">Bank</th>
+                            <th class="search">Branch</th>
+                            <th class="search">IFSC</th>
+                            <th class="search">State</th>
+
+                            <th class="search">City</th>
+                            <th class="search">District</th>
+                            <th class="search">Address</th>
+                            <th class="search">Contact</th>
+                            <th class="search">MICRCODE</th>
+
+                        </tr>
+                    </thead>
+                    <tbody id="tableIFSC">
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th class="search">Bank</th>
+                            <th class="search">Branch</th>
+                            <th class="search">IFSC</th>
+                            <th class="search">State</th>
+
+                            <th class="search">City</th>
+                            <th class="search">District</th>
+                            <th class="search">Address</th>
+                            <th class="search">Contact</th>
+                            <th class="search">MICRCODE</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <div class="card-footer">
+        <div class="row">
+            <div class="col-sm-12 border-right">
+                <div class="social-links">
+                    <a href="#"><i class="fa fa-twitter"></i></a>
+                    <a href="#"><i class="fa fa-facebook"></i></a>
+                    <a href="#"><i class="fa fa-instagram"></i></a>
+                </div>
+                <!-- /.description-block -->
+            </div>
+
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script>
+        $('#TblIFSCList').DataTable({
+            initComplete: function () {
+                var r = $('#TblIFSCList tfoot tr');
+                r.find('th').each(function () {
+                    if ($(this).hasClass('search')) {
+                        $(this).css('padding', 5);
+                        var title = $(this).text();
+                        $(this).html('<input type="text" class="form-control" placeholder="' + title + '" />');
+                    } else {
+                        $(this).html('');
+                    }
+                });
+                $('#TblIFSCList thead').prepend(r);
+                this.api().columns().every(function () {
+                    var that = this;
+                    $('input', this.footer()).on('keyup change clear',
+                        function () {
+                            if (that.search() !== this.value) {
+                                that
+                                    .search(this.value)
+                                    .draw();
+                            }
+                        });
+                });
+            },
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "rowReorder": {
+                "selector": 'td:nth-child(2)'
+            },
+            "responsive": true,
+            dom: "<'row'<'col-sm-6'l><'col-sm-6 text-right'<'d-inline-block'f><'d-inline-block'B>>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-4'i><'col-sm-8'p>>",
+            buttons: [
+                {
+                    extend: 'excel',
+                    className: 'btn btn-sm btn-primary ml-2',
+                    text: '<i class="fa fa-file-excel" data-toggle="tooltip" data-placement="top" title="Download Excel"></i>',
+                    exportOptions: {
+                        columns: 'th:not(.noExport)'
+                    },
+                    title: null
+                }
+            ],
+            "drawCallback": function () {
+                $('[data-toggle="tooltip"]').tooltip();
+            }
+        });
+        $('#BranchName').change(function () {
+            var branchNameId = $(this).children("option:selected").val();
+            var bankNameId = $("#BankName").children("option:selected").val();
+            $.get("?handler=IFSC", { bankName: bankNameId, branchName: branchNameId })
+                .done(function (data) {
+                    var options = '<option value="">-select-</option>';
+                    if (data && data != "Districts not found") {
+                        options = '';
+                        $(data).each(function (i, e) {
+                            options += '<tr>';
+                            options += '<td>' + e.BANK + '</td>';
+                            options += '<td>' + e.BRANCH + '</td>';
+                            options += '<td>' + e.IFSC + '</td>';
+                            options += '<td>' + e.STATE + '</td>';
+                            options += '<td>' + e.CITY + '</td>';
+
+                            options += '<td>' + e.DISTRICT + '</td>';
+                            options += '<td>' + e.ADDRESS + '</td>';
+                            options += '<td>' + e.CONTACT + '</td>';
+                            options += '<td>' + e.MICRCODE + '</td>';
+                         
+                            options += '</tr>';
+
+                        });
+                    } else {
+                        $("#divClientAlert").addClass("alert-danger");
+                        $("#divClientAlert > p.m-0").text(data);
+                        $("#divClientAlert").show();
+                        SetTimeOut($("#divClientAlert"));
+                    }
+                    $('#tableIFSC')
+                        .empty()
+                        .append(options);
+                });
+        });
+
+
+        $('#BankName').change(function () {
+            var bankNameId = $(this).children("option:selected").val();
+            $.get("?handler=BranchList", { bankName: bankNameId })
+                .done(function (data) {
+                    var options = '<option value="">-select-</option>';
+                    if (data && data != "branch not found") {
+                        options = '';
+                        $(data).each(function (i, e) {
+                            options += '<option value="' + e.id + '">' + e.name + '</option>';
+                        });
+                    } else {
+                        $("#divClientAlert").addClass("alert-danger");
+                        $("#divClientAlert > p.m-0").text(data);
+                        $("#divClientAlert").show();
+                        SetTimeOut($("#divClientAlert"));
+                    }
+                    $('#BranchName')
+                        .empty()
+                        .append(options);
+                });
+        });
+
+
+    </script>
+}
+
+
+
+
+
+
+
+

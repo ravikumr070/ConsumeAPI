@@ -1,0 +1,51 @@
+[
+  {
+    "outputFileName": "wwwroot/css/styles.css",
+    "inputFiles": [
+      "wwwroot/plugins/fontawesome-free/css/all.css",
+      "wwwroot/plugins/datatables-bs4/css/dataTables.bootstrap4.css",
+      "wwwroot/plugins/datatables-rowreorder/css/rowReorder.bootstrap4.css",
+      "wwwroot/plugins/datatables-responsive/css/responsive.bootstrap4.css",
+      "wwwroot/plugins/daterangepicker/daterangepicker.css",
+      "wwwroot/plugins/alt-theme/css/adminlte.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/styles.min.css",
+    "inputFiles": [
+      "wwwroot/css/styles.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/scripts.js",
+    "inputFiles": [
+      "wwwroot/plugins/jquery/jquery.js",
+      "wwwroot/plugins/jquery-ui/jquery-ui.js",
+      "wwwroot/plugins/bootstrap/js/bootstrap.bundle.js",
+      "wwwroot/plugins/daterangepicker/moment.min.js",
+      "wwwroot/plugins/inputmask/jquery.inputmask.bundle.js",
+      "wwwroot/plugins/daterangepicker/daterangepicker.js",
+      "wwwroot/plugins/jquery-validate/jquery.validate.js",
+      "wwwroot/plugins/jquery-validate/jquery.validate.unobtrusive.js",
+      "wwwroot/plugins/datatables/jquery.dataTables.js",
+      "wwwroot/plugins/datatables-bs4/js/dataTables.bootstrap4.js",
+      "wwwroot/plugins/datatables-rowReorder/js/dataTables.rowReorder.js",
+      "wwwroot/plugins/datatables-responsive/js/dataTables.responsive.js",
+      "wwwroot/plugins/datatables-buttons/js/dataTables.buttons.js",
+      "wwwroot/plugins/datatables-buttons/js/jszip.js",
+      "wwwroot/plugins/datatables-buttons/js/buttons.html5.js",
+      "wwwroot/plugins/alt-theme/js/adminlte.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/scripts.min.js",
+    "inputFiles": [
+      "wwwroot/js/scripts.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  }
+]
